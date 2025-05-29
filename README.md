@@ -36,5 +36,5 @@ Feel free to explore, fork, and contribute! Contributions are highly welcome to 
 
 ## Stay Connected
 
-- **GitHub**: [BehzadDara](https://github.com/BehzadDara)
-- **LinkedIn**: [Behzad Dara](https://www.linkedin.com/in/behzaddara/)
+- **GitHub**: [risky-biz](https://github.com/risky-biz/)
+- **LinkedIn**: [Rizki Eka Satria](https://www.linkedin.com/in/rizki-eka-satria/)
