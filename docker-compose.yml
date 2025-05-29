@@ -1,0 +1,69 @@
+version: '3.4'
+
+services:
+
+  DigitalHSEdb:
+    image: mcr.microsoft.com/mssql/server
+
+  DigitalHSE.api:
+    image: ${DOCKER_REGISTRY-}DigitalHSEapi
+    build:
+      context: .
+      dockerfile: DigitalHSE.API/Dockerfile
+
+  anotherDigitalHSEdb:
+    image: postgres
+
+  anotherDigitalHSE.api1:
+    image: ${DOCKER_REGISTRY-}anotherDigitalHSEapi
+    build:
+      context: .
+      dockerfile: AnotherDigitalHSE.API/Dockerfile
+
+  anotherDigitalHSE.api2:
+    image: ${DOCKER_REGISTRY-}anotherDigitalHSEapi
+    build:
+      context: .
+      dockerfile: AnotherDigitalHSE.API/Dockerfile
+
+  anotherDigitalHSE.api3:
+    image: ${DOCKER_REGISTRY-}anotherDigitalHSEapi
+    build:
+      context: .
+      dockerfile: AnotherDigitalHSE.API/Dockerfile
+
+  anotherDigitalHSE.loadbalancer:
+    image: ${DOCKER_REGISTRY-}anotherDigitalHSEloadbalancer
+    build:
+      context: .
+      dockerfile: AnotherDigitalHSE.LoadBalancer/Dockerfile
+
+  prometheus:
+    image: prom/prometheus
+
+  grafana:
+    image: grafana/grafana
+
+  redis:
+    image: redis/redis-stack
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.14.3
+
+  pgadmin:
+    image: dpage/pgadmin4
+    
+  portainer:
+    image: portainer/portainer-ce
+
+  rabbitmq:
+    image: rabbitmq:management
+
+volumes:
+  portainer_data:
+  postgres_data:
+  pgadmin_data:
+  elasticsearch-data:

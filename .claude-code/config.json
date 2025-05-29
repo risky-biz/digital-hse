@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "model": "claude-3-opus-20240229",
+  "tools": {
+    "context7": {
+      "type": "mcp",
+      "url": "https://context7.up.railway.app"
+    }
+  },
+  "preferences": {
+    "default_prompt_context": "development",
+    "include_project_context": true,
+    "thinking": {
+      "verbose": true,
+      "visible": true
+    }
+  },
+  "logging": {
+    "enabled": true,
+    "level": "info",
+    "file": ".claude-code/logs/claude-code.log"
+  },
+  "advanced": {
+    "timeout_seconds": 300,
+    "request_timeout_seconds": 600
+  }
+}
