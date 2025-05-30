@@ -1,0 +1,34 @@
+{
+  "menu": {
+    "dashboard": "Dashboard",
+    "incidents": "Incidents",
+    "riskAssessments": "Risk Assessments",
+    "permits": "Work Permits",
+    "compliance": "Compliance",
+    "training": "Training",
+    "reports": "Reports",
+    "administration": "Administration",
+    "users": "Users",
+    "roles": "Roles",
+    "settings": "Settings",
+    "auditLogs": "Audit Logs"
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "incidents": "Incidents",
+    "riskAssessments": "Risk Assessments",
+    "permits": "Work Permits",
+    "compliance": "Compliance",
+    "training": "Training",
+    "reports": "Reports",
+    "administration": "Administration"
+  },
+  "tabs": {
+    "overview": "Overview",
+    "details": "Details",
+    "actions": "Actions",
+    "attachments": "Attachments",
+    "history": "History",
+    "approvals": "Approvals"
+  }
+}

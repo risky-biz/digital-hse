@@ -1,0 +1,34 @@
+{
+  "menu": {
+    "dashboard": "Dasbor",
+    "incidents": "Insiden",
+    "riskAssessments": "Penilaian Risiko",
+    "permits": "Izin Kerja",
+    "compliance": "Kepatuhan",
+    "training": "Pelatihan",
+    "reports": "Laporan",
+    "administration": "Administrasi",
+    "users": "Pengguna",
+    "roles": "Peran",
+    "settings": "Pengaturan",
+    "auditLogs": "Log Audit"
+  },
+  "breadcrumb": {
+    "home": "Beranda",
+    "incidents": "Insiden",
+    "riskAssessments": "Penilaian Risiko",
+    "permits": "Izin Kerja",
+    "compliance": "Kepatuhan",
+    "training": "Pelatihan",
+    "reports": "Laporan",
+    "administration": "Administrasi"
+  },
+  "tabs": {
+    "overview": "Ringkasan",
+    "details": "Detail",
+    "actions": "Tindakan",
+    "attachments": "Lampiran",
+    "history": "Riwayat",
+    "approvals": "Persetujuan"
+  }
+}
