@@ -1,9 +1,14 @@
-﻿using BuildingBlocks.Domain.Interfaces;
+using DigitalHSE.Domain.Common;
+using DigitalHSE.Domain.Interfaces.HSE;
 
 namespace DigitalHSE.Domain.Interfaces;
 
 public interface IDigitalHSEUnitOfWork : IUnitOfWork
 {
-    public ISampleModelRepository SampleModelRepository { get; init; }
-    public IAnotherSampleModelRepository AnotherSampleModelRepository { get; init; }
+    // HSE Repositories
+    IIncidentRepository IncidentRepository { get; }
+    IRiskAssessmentRepository RiskAssessmentRepository { get; }
+    IPermitRepository PermitRepository { get; }
+    IComplianceItemRepository ComplianceItemRepository { get; }
+    ITrainingRecordRepository TrainingRecordRepository { get; }
 }

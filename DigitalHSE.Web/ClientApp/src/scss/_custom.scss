@@ -1,0 +1,396 @@
+// HSE-specific color scheme
+:root {
+  // Primary colors
+  --cui-primary: #1b5e20;        // HSE Green (dark)
+  --cui-primary-rgb: 27, 94, 32;
+  --cui-primary-hover: #2e7d32;  // HSE Green (hover)
+  --cui-primary-light: #4caf50;  // HSE Green (light)
+  
+  // Status colors
+  --cui-success: #2e7d32;
+  --cui-info: #0277bd;
+  --cui-warning: #f57c00;
+  --cui-danger: #c62828;
+  --cui-secondary: #546e7a;
+  
+  // HSE-specific colors
+  --hse-green: #1b5e20;
+  --hse-green-light: #4caf50;
+  --hse-green-dark: #0d3e10;
+  --hse-orange: #f57c00;
+  --hse-red: #c62828;
+  --hse-yellow: #fbc02d;
+  
+  // Override CoreUI defaults
+  --cui-sidebar-bg: var(--hse-green-dark);
+  --cui-sidebar-color: rgba(255, 255, 255, 0.87);
+  --cui-sidebar-link-color: rgba(255, 255, 255, 0.87);
+  --cui-sidebar-link-hover-bg: rgba(255, 255, 255, 0.1);
+  --cui-sidebar-brand-bg: var(--hse-green);
+}
+
+// Sidebar customization
+.sidebar {
+  background: var(--hse-green-dark) !important;
+  
+  .sidebar-brand {
+    background: var(--hse-green) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    .sidebar-brand-full {
+      h4 {
+        margin-bottom: 0.25rem;
+        font-weight: 600;
+      }
+      
+      small {
+        opacity: 0.8;
+        font-size: 0.75rem;
+      }
+    }
+  }
+  
+  .nav-link {
+    color: rgba(255, 255, 255, 0.87) !important;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      color: #fff !important;
+    }
+    
+    &.active {
+      background: var(--hse-green) !important;
+      color: #fff !important;
+    }
+  }
+  
+  .nav-icon {
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+  
+  .nav-title {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-top: 1rem;
+  }
+}
+
+// Header customization
+.header {
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  
+  .header-toggler {
+    color: var(--hse-green);
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    background: var(--hse-green);
+  }
+}
+
+// Button overrides
+.btn-primary {
+  background-color: var(--hse-green);
+  border-color: var(--hse-green);
+  
+  &:hover {
+    background-color: var(--hse-green-light);
+    border-color: var(--hse-green-light);
+  }
+  
+  &:focus, &:active {
+    background-color: var(--hse-green-dark);
+    border-color: var(--hse-green-dark);
+    box-shadow: 0 0 0 0.25rem rgba(27, 94, 32, 0.25);
+  }
+}
+
+// HSE-specific components
+.hse-risk-matrix {
+  .risk-extreme { 
+    background-color: var(--hse-red);
+    color: white;
+    font-weight: 600;
+  }
+  .risk-high { 
+    background-color: var(--hse-orange);
+    color: white;
+    font-weight: 600;
+  }
+  .risk-medium { 
+    background-color: var(--hse-yellow);
+    color: #333;
+    font-weight: 600;
+  }
+  .risk-low { 
+    background-color: var(--hse-green-light);
+    color: white;
+    font-weight: 600;
+  }
+  
+  td {
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+  }
+}
+
+// Custom dashboard widgets
+.hse-stat-widget {
+  transition: transform 0.2s;
+  border-left: 4px solid transparent;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  
+  &.text-danger {
+    border-left-color: var(--hse-red);
+  }
+  
+  &.text-warning {
+    border-left-color: var(--hse-orange);
+  }
+  
+  &.text-success {
+    border-left-color: var(--hse-green);
+  }
+  
+  &.text-info {
+    border-left-color: var(--cui-info);
+  }
+}
+
+// Incident severity badges
+.severity-badge, .badge {
+  &.severity-critical {
+    background-color: var(--hse-red);
+    color: white;
+  }
+  &.severity-major {
+    background-color: var(--hse-orange);
+    color: white;
+  }
+  &.severity-moderate {
+    background-color: #ff9800;
+    color: white;
+  }
+  &.severity-minor {
+    background-color: var(--cui-info);
+    color: white;
+  }
+}
+
+// Card customization
+.card {
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  
+  .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid var(--hse-green);
+    font-weight: 600;
+    color: var(--hse-green-dark);
+  }
+}
+
+// Table customization
+.table {
+  th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: var(--hse-green-dark);
+    border-bottom: 2px solid var(--hse-green);
+  }
+}
+
+// Form customization
+.form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.form-control:focus {
+  border-color: var(--hse-green);
+  box-shadow: 0 0 0 0.25rem rgba(27, 94, 32, 0.25);
+}
+
+.form-select:focus {
+  border-color: var(--hse-green);
+  box-shadow: 0 0 0 0.25rem rgba(27, 94, 32, 0.25);
+}
+
+// Login page customization
+.bg-primary {
+  background-color: var(--hse-green) !important;
+}
+
+// Breadcrumb customization
+.breadcrumb-item {
+  + .breadcrumb-item::before {
+    color: #6c757d;
+  }
+  
+  &.active {
+    color: var(--hse-green-dark);
+    font-weight: 600;
+  }
+}
+
+// Loading spinner
+.spinner-border-sm {
+  border-color: var(--hse-green);
+  border-right-color: transparent;
+}
+
+// Fix for dashboard glitching
+.wrapper {
+  transition: margin-left 0.3s;
+}
+
+// Prevent widget hover glitches
+.hse-stat-widget {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: subpixel-antialiased;
+  transform: translateZ(0);
+}
+
+// Fix chart rendering issues
+.chart-wrapper {
+  position: relative;
+  height: auto !important;
+}
+
+// Prevent sidebar transition conflicts
+.sidebar-toggler {
+  transition: none;
+}
+
+// Fix for React StrictMode double render flicker
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// Fix layout spacing and sidebar overlap
+.sidebar-fixed {
+  .wrapper {
+    margin-left: var(--cui-sidebar-width, 256px);
+    transition: margin-left 0.15s;
+  }
+  
+  .sidebar.sidebar-narrow-unfoldable ~ .wrapper,
+  .sidebar.sidebar-minimized ~ .wrapper {
+    margin-left: var(--cui-sidebar-narrow-width, 56px);
+  }
+}
+
+// Mobile responsiveness
+@media (max-width: 991.98px) {
+  .sidebar-fixed .wrapper {
+    margin-left: 0 !important;
+  }
+}
+
+// Content padding
+.body {
+  padding: 1rem;
+  width: 100%;
+  max-width: none;
+}
+
+// Dashboard specific fixes - make it full width
+.container-fluid {
+  padding-right: 1rem;
+  padding-left: 1rem;
+  max-width: none !important;
+  width: 100% !important;
+}
+
+// Ensure dashboard content uses full width
+.main-content {
+  width: 100%;
+  max-width: none;
+}
+
+// Fix dashboard cards to be responsive
+.hse-stat-widget {
+  width: 100%;
+  min-height: 120px;
+}
+
+// Make dashboard rows full width
+.dashboard-content {
+  width: 100%;
+  
+  .row {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+  }
+  
+  .col, [class*="col-"] {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
+// Override any container max-width restrictions
+.container, .container-fluid, .container-sm, .container-md, .container-lg, .container-xl, .container-xxl {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+// App content wrapper - force full width
+.app-content-wrapper {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+// CoreUI overrides for full width
+.sidebar-fixed .wrapper {
+  margin-left: 256px !important;
+  width: calc(100% - 256px) !important;
+  max-width: none !important;
+}
+
+// Force dashboard to use full available space
+.dashboard-content {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 1rem !important;
+}
+
+// Ensure all rows and columns are full width
+.dashboard-content .row {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+
+.dashboard-content .col,
+.dashboard-content [class*="col-"] {
+  max-width: none !important;
+}

@@ -1,69 +1,134 @@
-version: '3.4'
-
 services:
+  # PostgreSQL Database for DigitalHSE
+  digitalhse.db:
+    image: postgres:17-alpine
+    container_name: digitalhse-postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=DigitalHSEDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - digitalhse_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  DigitalHSEdb:
-    image: mcr.microsoft.com/mssql/server
+  # PgAdmin for database management
+  digitalhse.pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: digitalhse-pgadmin
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@digitalhse.com
+      - PGADMIN_DEFAULT_PASSWORD=admin123
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - digitalhse_network
+    depends_on:
+      - digitalhse.db
 
-  DigitalHSE.api:
-    image: ${DOCKER_REGISTRY-}DigitalHSEapi
-    build:
-      context: .
-      dockerfile: DigitalHSE.API/Dockerfile
+  # Redis for caching
+  digitalhse.redis:
+    image: redis:7-alpine
+    container_name: digitalhse-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - digitalhse_network
 
-  anotherDigitalHSEdb:
-    image: postgres
+  # RabbitMQ for messaging
+  digitalhse.rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: digitalhse-rabbitmq
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - digitalhse_network
 
-  anotherDigitalHSE.api1:
-    image: ${DOCKER_REGISTRY-}anotherDigitalHSEapi
-    build:
-      context: .
-      dockerfile: AnotherDigitalHSE.API/Dockerfile
+  # Elasticsearch for logging
+  digitalhse.elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: digitalhse-elasticsearch
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - digitalhse_network
 
-  anotherDigitalHSE.api2:
-    image: ${DOCKER_REGISTRY-}anotherDigitalHSEapi
-    build:
-      context: .
-      dockerfile: AnotherDigitalHSE.API/Dockerfile
+  # Kibana for log visualization
+  digitalhse.kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: digitalhse-kibana
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=http://digitalhse.elasticsearch:9200
+    ports:
+      - "5601:5601"
+    networks:
+      - digitalhse_network
+    depends_on:
+      - digitalhse.elasticsearch
 
-  anotherDigitalHSE.api3:
-    image: ${DOCKER_REGISTRY-}anotherDigitalHSEapi
-    build:
-      context: .
-      dockerfile: AnotherDigitalHSE.API/Dockerfile
+  # Prometheus for metrics
+  digitalhse.prometheus:
+    image: prom/prometheus:latest
+    container_name: digitalhse-prometheus
+    restart: always
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./Monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - digitalhse_network
 
-  anotherDigitalHSE.loadbalancer:
-    image: ${DOCKER_REGISTRY-}anotherDigitalHSEloadbalancer
-    build:
-      context: .
-      dockerfile: AnotherDigitalHSE.LoadBalancer/Dockerfile
-
-  prometheus:
-    image: prom/prometheus
-
-  grafana:
-    image: grafana/grafana
-
-  redis:
-    image: redis/redis-stack
-
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.14.3
-
-  pgadmin:
-    image: dpage/pgadmin4
-    
-  portainer:
-    image: portainer/portainer-ce
-
-  rabbitmq:
-    image: rabbitmq:management
+  # Grafana for monitoring dashboards
+  digitalhse.grafana:
+    image: grafana/grafana:latest
+    container_name: digitalhse-grafana
+    restart: always
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - digitalhse_network
+    depends_on:
+      - digitalhse.prometheus
 
 volumes:
-  portainer_data:
   postgres_data:
   pgadmin_data:
-  elasticsearch-data:
+  elasticsearch_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  digitalhse_network:
+    driver: bridge

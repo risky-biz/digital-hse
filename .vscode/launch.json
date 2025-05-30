@@ -1,0 +1,49 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch DigitalHSE.Web",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "Build Solution",
+      "program": "${workspaceFolder}/DigitalHSE.Web/bin/Debug/net8.0/DigitalHSE.Web.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/DigitalHSE.Web",
+      "stopAtEntry": false,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "sourceFileMap": {
+        "/Views": "${workspaceFolder}/Views"
+      }
+    },
+    {
+      "name": "Launch DigitalHSE.API",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "Build Solution",
+      "program": "${workspaceFolder}/DigitalHSE.API/bin/Debug/net8.0/DigitalHSE.API.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/DigitalHSE.API",
+      "stopAtEntry": false,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Full Stack Debug",
+      "configurations": ["Launch DigitalHSE.Web"],
+      "preLaunchTask": "Run Full Stack"
+    }
+  ]
+}

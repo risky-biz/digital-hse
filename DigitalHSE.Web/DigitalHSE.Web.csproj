@@ -1,0 +1,126 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <SpaRoot>ClientApp\</SpaRoot>
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+    <SpaProxyServerUrl>http://localhost:3000</SpaProxyServerUrl>
+    <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
+    <!-- Option to control React app building - defaults to true for Debug, false for Release -->
+    <BuildReactApp Condition="'$(BuildReactApp)' == ''">$(Configuration.Equals('Debug'))</BuildReactApp>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DigitalHSE.Application\DigitalHSE.Application.csproj" />
+    <ProjectReference Include="..\DigitalHSE.Infrastructure\DigitalHSE.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <!-- Don't publish the SPA source files, but do show them in the project files list -->
+  <ItemGroup>
+    <Content Remove="$(SpaRoot)**" />
+    <None Remove="$(SpaRoot)**" />
+    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+
+  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+  </Target>
+
+  <!-- Build React app and copy to wwwroot for development -->
+  <Target Name="BuildReactApp" BeforeTargets="Build" Condition=" '$(BuildReactApp)' == 'true' ">
+    <Message Importance="high" Text="Building React application..." />
+    
+    <!-- Clean wwwroot directory (except for specific files we want to keep) -->
+    <Message Importance="high" Text="Cleaning wwwroot directory..." />
+    <ItemGroup>
+      <!-- Define files/folders to keep -->
+      <FilesToKeep Include="wwwroot\favicon.ico" />
+      <FilesToKeep Include="wwwroot\robots.txt" />
+      
+      <!-- Get all files in wwwroot -->
+      <FilesToDelete Include="wwwroot\**\*" Exclude="@(FilesToKeep)" />
+      <DirectoriesToDelete Include="$([System.IO.Directory]::GetDirectories('wwwroot', '*', System.IO.SearchOption.AllDirectories))" Condition="Exists('wwwroot')" />
+    </ItemGroup>
+    
+    <!-- Delete files and directories -->
+    <Delete Files="@(FilesToDelete)" />
+    <RemoveDir Directories="@(DirectoriesToDelete)" />
+    
+    <!-- Ensure node_modules exists -->
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" Condition="!Exists('$(SpaRoot)node_modules')" />
+    
+    <!-- Build React app -->
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
+    
+    <!-- Create wwwroot directory if it doesn't exist -->
+    <MakeDir Directories="wwwroot" Condition="!Exists('wwwroot')" />
+    
+    <!-- Copy build files to wwwroot -->
+    <ItemGroup>
+      <ReactBuildFiles Include="$(SpaRoot)build\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(ReactBuildFiles)" DestinationFolder="wwwroot\%(ReactBuildFiles.RecursiveDir)" />
+    
+    <Message Importance="high" Text="React application built and copied to wwwroot" />
+  </Target>
+
+  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+    <!-- Clean React build directory before building -->
+    <Message Importance="high" Text="Cleaning React build directory..." />
+    <RemoveDir Directories="$(SpaRoot)build" Condition="Exists('$(SpaRoot)build')" />
+    
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
+
+    <!-- Include the newly-built files in the publish output -->
+    <ItemGroup>
+      <DistFiles Include="$(SpaRoot)build\**" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>wwwroot\%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
+  <!-- Manual clean target for React assets -->
+  <Target Name="CleanReactAssets">
+    <Message Importance="high" Text="Cleaning React build assets..." />
+    
+    <!-- Clean React build directory -->
+    <RemoveDir Directories="$(SpaRoot)build" Condition="Exists('$(SpaRoot)build')" />
+    
+    <!-- Clean wwwroot directory -->
+    <ItemGroup>
+      <!-- Define files/folders to keep -->
+      <FilesToKeep Include="wwwroot\favicon.ico" />
+      <FilesToKeep Include="wwwroot\robots.txt" />
+      
+      <!-- Get all files in wwwroot -->
+      <FilesToDelete Include="wwwroot\**\*" Exclude="@(FilesToKeep)" />
+      <DirectoriesToDelete Include="$([System.IO.Directory]::GetDirectories('wwwroot', '*', System.IO.SearchOption.AllDirectories))" Condition="Exists('wwwroot')" />
+    </ItemGroup>
+    
+    <!-- Delete files and directories -->
+    <Delete Files="@(FilesToDelete)" />
+    <RemoveDir Directories="@(DirectoriesToDelete)" />
+    
+    <Message Importance="high" Text="React assets cleaned successfully" />
+  </Target>
+
+</Project>

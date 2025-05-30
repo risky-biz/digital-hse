@@ -27,6 +27,11 @@ dotnet run --project AnotherDigitalHSE.API
 # Run load balancer
 dotnet run --project AnotherDigitalHSE.LoadBalancer
 
+# Run Web application (Frontend + Backend)
+dotnet run --project DigitalHSE.Web
+# Or for development with hot reload:
+dotnet watch run --project DigitalHSE.Web
+
 # Run all services with Docker Compose
 docker-compose up -d
 
@@ -48,14 +53,17 @@ dotnet test --logger "console;verbosity=detailed"
 
 ### Database Commands
 ```bash
-# Apply migrations for main database (SQL Server)
-dotnet ef database update --project DigitalHSE.Infrastructure --startup-project DigitalHSE.API
-
-# Apply migrations for secondary database (PostgreSQL)
-dotnet ef database update --project AnotherDigitalHSE.API
+# Apply migrations for PostgreSQL database
+dotnet ef database update --project DigitalHSE.Infrastructure --startup-project DigitalHSE.Web
 
 # Add new migration
-dotnet ef migrations add MigrationName --project DigitalHSE.Infrastructure --startup-project DigitalHSE.API
+dotnet ef migrations add MigrationName --project DigitalHSE.Infrastructure --startup-project DigitalHSE.Web
+
+# Remove last migration (if not yet applied)
+dotnet ef migrations remove --project DigitalHSE.Infrastructure --startup-project DigitalHSE.Web
+
+# Generate migration script
+dotnet ef migrations script --project DigitalHSE.Infrastructure --startup-project DigitalHSE.Web
 ```
 
 ## Architecture Overview
@@ -67,6 +75,14 @@ This solution follows Clean Architecture with Domain-Driven Design (DDD) princip
 2. **Application Layer** - Use cases, CQRS commands/queries, business logic
 3. **Infrastructure Layer** - Data access, external services, persistence
 4. **API Layer** - REST endpoints, middleware, presentation logic
+
+### Web Project (DigitalHSE.Web)
+The solution now includes a unified Web project that combines:
+- **Backend**: ASP.NET Core 8 Web API
+- **Frontend**: CoreUI React with TypeScript
+- **SPA Hosting**: Integrated React app served by .NET
+- **Development**: Hot reload for both C# and React code
+- Located in `/DigitalHSE.Web` with React app in `/DigitalHSE.Web/ClientApp`
 
 ### Key Architectural Patterns
 
@@ -90,34 +106,33 @@ The BuildingBlocks folder contains reusable components:
 - **BuildingBlocks.API**: Base controllers, Swagger configuration, health checks
 - **BuildingBlocks.Resources**: Localization resources
 
-### Microservices Architecture
+### Infrastructure Services
 
-The solution includes multiple services orchestrated with Docker:
+The solution uses PostgreSQL as the primary database and includes the following infrastructure services orchestrated with Docker:
 
-1. **DigitalHSE.API** (Port 7100)
-   - Main service with SQL Server database
+1. **DigitalHSE.Web** (Port configured in launchSettings.json)
+   - Unified Web application with React frontend and .NET backend
+   - PostgreSQL database for all data persistence
    - JWT authentication
-   - Hangfire for background jobs
-   - Feature management support
+   - React SPA with CoreUI for the UI
 
-2. **AnotherDigitalHSE.API** (3 instances: Ports 6001-6003)
-   - Secondary service with PostgreSQL database
-   - RabbitMQ integration
-   - Horizontal scaling demonstration
+2. **Infrastructure Services**:
+   - **PostgreSQL** (Port 5432) - Primary database
+   - **PgAdmin** (Port 5050) - Database management interface
+   - **Redis** (Port 6379) - Caching and session storage
+   - **RabbitMQ** (Ports 5672, 15672) - Message queue for async operations
+   - **Elasticsearch** (Port 9200) - Centralized logging
+   - **Kibana** (Port 5601) - Log visualization and search
+   - **Prometheus** (Port 9090) - Metrics collection
+   - **Grafana** (Port 3000) - Monitoring dashboards
 
-3. **AnotherDigitalHSE.LoadBalancer** (Port 5020)
-   - YARP-based reverse proxy
-   - Load balancing across AnotherDigitalHSE instances
+### Database Configuration
 
-4. **Infrastructure Services**:
-   - Redis (Port 6379) - Caching
-   - RabbitMQ (Ports 5672, 15672) - Message queue
-   - SQL Server (Port 1433)
-   - PostgreSQL (Port 5432)
-   - Elasticsearch (Port 9200) - Logging
-   - Kibana (Port 5601) - Log visualization
-   - Prometheus (Port 9090) - Metrics
-   - Grafana (Port 3000) - Monitoring dashboards
+The solution uses PostgreSQL 17 as the primary database:
+- Connection string in appsettings.json
+- Entity Framework Core with Npgsql provider
+- Migrations stored in DigitalHSE.Infrastructure/Migrations
+- Support for both EF Core and Dapper for data access
 
 ### Important Middleware and Features
 

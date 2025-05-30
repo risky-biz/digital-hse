@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <rect width="200" height="200" rx="20" fill="#1b5e20"/>
+  <text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="60" font-weight="bold">
+    HSE
+  </text>
+  <text x="50%" y="65%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="20">
+    BSJ
+  </text>
+</svg>
